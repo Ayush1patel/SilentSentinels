@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🛡️ Silent Sentinel - AI Emergency Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title" data-i18n="menu">Menu</span>
+      <button class="sidebar-close" id="sidebarClose">&times;</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="sidebar-nav">
+      <button class="sidebar-nav-item active" id="navDashboardMain" data-view="main">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="home">Home</span>
+      </button>
+      <button class="sidebar-nav-item" id="navDashboardStats" data-view="dashboard">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="dashboard">Dashboard</span>
+      </button>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title" data-i18n="settings">Settings</div>
+
+      <!-- Sound Toggle -->
+      <div class="settings-toggle">
+        <span class="settings-toggle-label" data-i18n="soundEffects">Sound Effects</span>
+        <label class="toggle-label" style="padding: 0;">
+          <input type="checkbox" id="sidebarSoundEffects" class="toggle-input" checked />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Notifications Toggle -->
+      <div class="settings-toggle">
+        <span class="settings-toggle-label" data-i18n="notifications">Notifications</span>
+        <label class="toggle-label" style="padding: 0;">
+          <input type="checkbox" id="sidebarNotifications" class="toggle-input" checked />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Debug Toggle -->
+      <div class="settings-toggle">
+        <span class="settings-toggle-label" data-i18n="debugMode">Debug Mode</span>
+        <label class="toggle-label" style="padding: 0;">
+          <input type="checkbox" id="sidebarDebugMode" class="toggle-input" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Theme Section -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title" data-i18n="theme">Theme</div>
+      <div class="theme-grid">
+        <div class="theme-option theme-dark active" data-theme="dark">
+          <div class="theme-preview"></div>
+          <span class="theme-name" data-i18n="themeDark">Dark</span>
+        </div>
+        <div class="theme-option theme-light" data-theme="light">
+          <div class="theme-preview"></div>
+          <span class="theme-name" data-i18n="themeLight">Light</span>
+        </div>
+        <div class="theme-option theme-cyberpunk" data-theme="cyberpunk">
+          <div class="theme-preview"></div>
+          <span class="theme-name" data-i18n="themeCyberpunk">Cyberpunk</span>
+        </div>
+        <div class="theme-option theme-ocean" data-theme="ocean">
+          <div class="theme-preview"></div>
+          <span class="theme-name" data-i18n="themeOcean">Ocean</span>
+        </div>
+        <div class="theme-option theme-forest" data-theme="forest">
+          <div class="theme-preview"></div>
+          <span class="theme-name" data-i18n="themeForest">Forest</span>
+        </div>
+        <div class="theme-option theme-sunset" data-theme="sunset">
+          <div class="theme-preview"></div>
+          <span class="theme-name" data-i18n="themeSunset">Sunset</span>
+        </div>
+        <div class="theme-option theme-midnight" data-theme="midnight">
+          <div class="theme-preview"></div>
+          <span class="theme-name" data-i18n="themeMidnight">Midnight</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Language Section -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title" data-i18n="language">Language</div>
+      <div class="language-grid">
+        <div class="language-option active" data-lang="en">
+          <span class="lang-flag">🇬🇧</span>
+          <span>English</span>
+        </div>
+        <div class="language-option" data-lang="hi">
+          <span class="lang-flag">🇮🇳</span>
+          <span>हिंदी</span>
+        </div>
+        <div class="language-option" data-lang="bn">
+          <span class="lang-flag">🇮🇳</span>
+          <span>বাংলা</span>
+        </div>
+        <div class="language-option" data-lang="mr">
+          <span class="lang-flag">🇮🇳</span>
+          <span>मराठी</span>
+        </div>
+        <div class="language-option" data-lang="ta">
+          <span class="lang-flag">🇮🇳</span>
+          <span>தமிழ்</span>
+        </div>
+        <div class="language-option" data-lang="kn">
+          <span class="lang-flag">🇮🇳</span>
+          <span>ಕನ್ನಡ</span>
+        </div>
+        <div class="language-option" data-lang="gu">
+          <span class="lang-flag">🇮🇳</span>
+          <span>ગુજરાતી</span>
+        </div>
+        <div class="language-option" data-lang="as">
+          <span class="lang-flag">🇮🇳</span>
+          <span>অসমীয়া</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Animated Background Particles -->
+  <div class="particles-container">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Floating Orbs -->
+  <div class="orbs-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Alert Box -->
+  <div id="alertBox" class="hidden"></div>
+
+  <!-- Main Dashboard Container -->
+  <div class="dashboard">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content" style="display: flex; align-items: center; gap: 16px;">
+        <!-- Hamburger Menu Button -->
+        <button class="hamburger-btn" id="hamburgerBtn" title="Open Menu">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <div>
+          <div class="logo-container">
+            <div class="logo-pulse"></div>
+            <h1>🛡️ Silent Sentinel</h1>
+          </div>
+          <p class="subtitle" data-i18n="subtitle">AI-Powered Emergency Detection System</p>
+          <div class="live-clock">
+            <span id="liveClock">--:--:--</span>
+            <span class="live-indicator"></span>
+          </div>
+        </div>
+      </div>
+      <div class="header-controls">
+        <!-- Hidden inputs for backward compatibility -->
+        <input type="checkbox" id="debugMode" class="toggle-input" style="display:none;" />
+        <input type="checkbox" id="soundEffects" class="toggle-input" style="display:none;" checked />
+        <input type="checkbox" id="notifications" class="toggle-input" style="display:none;" checked />
+      </div>
+    </header>
+
+    <!-- Main View (Home) -->
+    <div class="main-view" id="mainView">
+      <!-- Main Grid Layout -->
+      <div class="dashboard-grid">
+
+        <!-- Left Column: Detection & Log -->
+        <div class="left-column">
+
+          <!-- Current Detection Card -->
+          <div class="card detection-card glow-card">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <h2 data-i18n="currentDetection">🎯 Current Detection</h2>
+              <div class="status-indicator" id="statusIndicator"></div>
+            </div>
+            <div class="detection-display">
+              <div class="sound-wave">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div id="soundLabel" class="sound-label">—</div>
+              <div id="confidence" class="confidence-text" data-i18n="waitingAudio">Waiting for audio...</div>
+              <div class="gunshot-indicator" id="gunshotIndicator">
+                <span class="gunshot-icon">🎯</span>
+                <span id="gunshotProb">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Audio Visualizer -->
+          <div class="card visualizer-card">
+            <div class="card-header">
+              <h2 data-i18n="liveSpectrum">📊 Live Audio Spectrum</h2>
+            </div>
+            <div class="spectrum-visualizer" id="spectrumVisualizer">
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+              <div class="spectrum-bar"></div>
+            </div>
+          </div>
+
+          <!-- Detection Log Card -->
+          <div class="card log-card">
+            <div class="card-header">
+              <h2 data-i18n="detectionHistory">📋 Detection History</h2>
+              <button class="clear-log-btn" id="clearLogBtn" title="Clear Log">🗑️</button>
+            </div>
+            <div id="detectionLog" class="detection-log"></div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: AI Verdict & Controls -->
+        <div class="right-column">
+
+          <!-- AI Verdict Card (Hero) -->
+          <div class="card ai-verdict-card hero-glow">
+            <div class="card-glow"></div>
+            <div class="card-header">
+              <h2 data-i18n="aiVerdict">🤖 AI Safety Verdict</h2>
+              <div class="ai-status">
+                <span class="ai-dot"></span>
+                <span>Claude AI</span>
+              </div>
+            </div>
+            <div class="ai-verdict-display">
+              <div class="verdict-icon-container">
+                <div class="verdict-ring"></div>
+                <div id="verdictIcon" class="verdict-icon">🔍</div>
+              </div>
+              <div id="claudeVerdict" class="verdict-text" data-i18n="waitingDetection">Waiting for detection...</div>
+              <div id="claudeReason" class="verdict-reason"></div>
+              <div id="claudeRecommendation" class="verdict-recommendation"></div>
+            </div>
+          </div>
+
+          <!-- Control Panel Card -->
+          <div class="card control-card">
+            <div class="card-header">
+              <h2 data-i18n="controlPanel">⚙️ Control Panel</h2>
+            </div>
+            <div class="control-content">
+              <div id="status" class="status-text" data-i18n="statusIdle">Status: Idle</div>
+              <div class="controls">
+                <button id="startBtn" class="btn-primary">
+                  <span class="btn-icon">▶</span>
+                  <span data-i18n="startMonitoring">Start Monitoring</span>
+                </button>
+                <button id="stopBtn" class="btn-danger" disabled>
+                  <span class="btn-icon">⏹</span>
+                  <span data-i18n="stop">Stop</span>
+                </button>
+              </div>
+
+              <!-- Emergency Controls -->
+              <div id="emergencyControls" class="emergency-controls hidden">
+                <div class="emergency-header">
+                  <span class="pulse-dot"></span>
+                  <span data-i18n="emergencyRequired">⚠️ Emergency Response Required</span>
+                </div>
+                <button id="resumeNowBtn" class="btn-info">
+                  <span data-i18n="resumeNow">✅ Resume Now (False Alarm)</span>
+                </button>
+                <button id="resumeLaterBtn" class="btn-warning">
+                  <span data-i18n="pauseHours">⏸️ Pause for 3 Hours (Real Emergency)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Card -->
+          <div class="card stats-card">
+            <div class="card-header">
+              <h2 data-i18n="sessionStats">📈 Session Statistics</h2>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value" id="statDetections">0</div>
+                <div class="stat-label" data-i18n="detections">Detections</div>
+              </div>
+              <div class="stat-item critical">
+                <div class="stat-value" id="statCritical">0</div>
+                <div class="stat-label" data-i18n="critical">Critical</div>
+              </div>
+              <div class="stat-item emergency">
+                <div class="stat-value" id="statEmergencies">0</div>
+                <div class="stat-label" data-i18n="emergencies">Emergencies</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="statUptime">0:00</div>
+                <div class="stat-label" data-i18n="uptime">Uptime</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar: Audio Visualization & Info -->
+      <div class="bottom-bar">
+        <div class="bottom-bar-content">
+          <!-- Audio Level -->
+          <div class="audio-viz-container">
+            <div class="audio-viz-header">
+              <span class="viz-label" data-i18n="audioLevel">🎙️ Audio Level</span>
+              <span id="rmsValue" class="rms-value">0.0000</span>
+            </div>
+            <div class="audio-level-bar">
+              <div id="audioLevelBar" class="audio-level-fill"></div>
+              <div class="audio-level-markers">
+                <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shortcuts Hint -->
+          <div class="shortcuts-hint">
+            <kbd>S</kbd> <span data-i18n="start">Start</span>
+            <kbd>X</kbd> <span data-i18n="stop">Stop</span>
+            <kbd>M</kbd> <span data-i18n="menu">Menu</span>
+            <kbd>?</kbd> <span data-i18n="help">Help</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard View (Analytics) -->
+    <div class="dashboard-view" id="dashboardView">
+      <!-- Stats Summary -->
+      <div class="stats-summary">
+        <div class="summary-card">
+          <div class="summary-icon">📊</div>
+          <div class="summary-value" id="dashTotalDetections">0</div>
+          <div class="summary-label" data-i18n="totalDetections">Total Detections</div>
+        </div>
+        <div class="summary-card warning">
+          <div class="summary-icon">⚠️</div>
+          <div class="summary-value" id="dashCriticalEvents">0</div>
+          <div class="summary-label" data-i18n="criticalEvents">Critical Events</div>
+        </div>
+        <div class="summary-card danger">
+          <div class="summary-icon">🚨</div>
+          <div class="summary-value" id="dashEmergencies">0</div>
+          <div class="summary-label" data-i18n="emergenciesTriggered">Emergencies Triggered</div>
+        </div>
+        <div class="summary-card success">
+          <div class="summary-icon">✅</div>
+          <div class="summary-value" id="dashSafeEvents">0</div>
+          <div class="summary-label" data-i18n="safeEvents">Safe Events</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3 data-i18n="detectionTimeline">📈 Detection Timeline</h3>
+          <div class="chart-wrapper">
+            <canvas id="timelineChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 data-i18n="soundDistribution">🔊 Sound Type Distribution</h3>
+          <div class="chart-wrapper">
+            <canvas id="distributionChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 data-i18n="confidenceLevels">📊 Confidence Levels</h3>
+          <div class="chart-wrapper">
+            <canvas id="confidenceChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 data-i18n="hourlyActivity">🕐 Hourly Activity</h3>
+          <div class="chart-wrapper">
+            <canvas id="hourlyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detection History Table -->
+      <div class="history-card">
+        <h3 data-i18n="recentDetections">📋 Recent Detections</h3>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th data-i18n="time">Time</th>
+              <th data-i18n="soundType">Sound Type</th>
+              <th data-i18n="confidence">Confidence</th>
+              <th data-i18n="status">Status</th>
+              <th data-i18n="aiVerdict">AI Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <!-- Dynamic rows will be added here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>
