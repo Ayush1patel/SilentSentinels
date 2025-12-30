@@ -1,0 +1,23 @@
+[
+  {
+    "id": "alert_1767043176446",
+    "type": "emergency_alert",
+    "timestamp": "2025-12-29T21:19:35.225Z",
+    "severity": "critical",
+    "message": "EMERGENCY - Silent Sentinel\n\nEmergency detected! Gunshot detected with high confidence\n\nSound Detected: Gunshot (Custom)\nReason: Gunshot detected with high confidence\nTime: 30/12/2025, 2:49:35 am\n\nIMMEDIATE ACTION REQUIRED!",
+    "contacts": [
+      "whatsapp:+919319833299"
+    ],
+    "soundType": "Gunshot (Custom)",
+    "reason": "Gunshot detected with high confidence",
+    "sendResults": [
+      {
+        "contact": "whatsapp:+919319833299",
+        "success": true,
+        "mock": false,
+        "sid": "SM49e4121b04f9dcaaae628f64cee3ad9a"
+      }
+    ],
+    "isMock": false
+  }
+]
