@@ -57,3 +57,43 @@ The client runs the local sound detection.
 
 ## Note
 Currently, the client detects sounds locally using YAMNet and a custom gunshot model. When emergencies are detected, it sends requests to the server's `/verify-sound` endpoint. The Claude AI then verifies the emergency and triggers appropriate MCP tools (WhatsApp alerts, logging, etc.).
+
+# Team Codebase Contribution & Distribution
+
+Here is the detailed breakdown of contributions and responsibilities for each team member:
+
+## Sachin Nain
+- **Backend**: Developed core server infrastructure, designed API endpoints, and set up environment configuration and training service orchestration.
+  - *Highlights*: Implemented graceful shutdown mechanisms and contributed to overall architecture.
+- **MCP (Model Context Protocol)**: Implemented the core MCP module, handling event logging and emergency protocol workflows.
+  - *Highlights*: Designed state management for MCP, integrated escalation logic, and added comprehensive logging.
+
+## Aryan Malik
+- **Backend**: Optimized backend performance, performed code reviews, and improved API latency and stability.
+  - *Highlights*: Added monitoring, logging enhancements, and collaborated on performance tuning.
+- **YAMNet**: Developed the audio classification pipeline and integrated YAMNet logic.
+  - *Highlights*: Refined audio preprocessing, tuned thresholds, and added custom event triggers.
+
+## Naman Jindal
+- **YAMNet**: Co‑authored detection algorithms, optimized model inference speed, and improved accuracy.
+  - *Focus*: Fine‑tuning YAMNet parameters and adding post‑processing filters.
+- **Documentation**: Authored and maintained project documentation, feature guides, and specifications.
+  - *Highlights*: Structured documentation hierarchy and ensured up‑to‑date guides.
+
+## Vraj Vashi
+- **Frontend**: Designed UI components, implemented styling, and built client‑side application logic.
+  - *Highlights*: Created responsive layout, added interactive elements, and integrated API calls.
+- **Custom Model**: Trained and integrated the custom gunshot detection model.
+  - *Highlights*: Collected training data, performed model conversion for web deployment, and added inference pipeline.
+
+## Ayush Patel
+- **MCP**: Contributed to MCP features, emergency response protocols, and alert mechanisms.
+  - *Highlights*: Implemented logging of emergency events, integrated WhatsApp alerts, and added user safety status checks.
+- **Custom Model**: Assisted in training data preparation and validation for the gunshot model.
+  - *Focus*: Curated dataset, performed validation, and fine‑tuned model hyperparameters.
+
+## Shive Bhat
+- **Frontend**: Co‑developed UI/UX, added voice command features, contributed to architecture documentation, built interactive dashboards, and implemented multilingual support.
+  - *Highlights*: Implemented voice command handling, refined UI interactions, created responsive dashboards for data visualization, integrated i18n library for multilingual UI, and documented overall architecture.
+- **Documentation**: Helped structure project guides and maintain core documentation files.
+  - *Highlights*: Updated setup instructions, changelog, and security considerations.
