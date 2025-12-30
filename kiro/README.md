@@ -81,6 +81,7 @@ kiro/
 ### Story
 - [**Journey**](./JOURNEY.md) — The development narrative
 - [**Features**](./FEATURES.md) — Capability showcase
+- [**Impact Metrics**](./IMPACT_METRICS.md) — Stats & achievements 🆕
 
 ---
 

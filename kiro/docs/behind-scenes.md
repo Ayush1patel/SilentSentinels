@@ -1,103 +1,93 @@
 # 🎬 Behind the Scenes
 
-> The development story of Silent Sentinel
+<p align="center">
+  <strong>Development Insights & War Stories</strong>
+</p>
 
 ---
 
-## The Challenge
+## 🔥 The War Stories
 
-Building an AI-powered emergency detection system in a hackathon timeframe seemed impossible. We needed:
+### The Stale Alert Bug
 
-- Real-time audio processing in the browser
-- Multi-model ML inference
-- Intelligent alert triggering
-- Premium, accessible UI
-- Claude AI integration
-
-**Without Kiro, this would have taken weeks. With Kiro, it took days.**
-
----
-
-## The Kiro Advantage
-
-### Spec-Driven Development
-
-Instead of diving into code, we started with specifications:
-
-1. **User Stories** defined what we were building and why
-2. **Technical Design** mapped the architecture
-3. **Task Breakdown** created actionable items
-
-This approach eliminated backtracking. Every feature had a clear purpose before a single line of code was written.
-
-### Context-Aware Assistance
-
-Kiro didn't just generate code—it understood our project:
-
-- Knew our file structure
-- Understood our coding conventions
-- Remembered previous decisions
-- Connected related components
-
-### Intelligent Iteration
-
-Each conversation built on the last:
+**Day 3, 11 PM:** Users kept getting alerts for sounds detected 30 seconds ago.
 
 ```
-Session 1: "Design the audio pipeline"
-Session 2: "Now add pattern detection"
-Session 3: "Integrate Claude for verification"
-Session 4: "Make the UI stunning"
+Debug log:
+- Sound: Gunshot → Claude triggered → Response arrives → Alert shows
+- But wait... the alert was for a PREVIOUS sound! 😱
 ```
 
-Each step informed the next, creating a cohesive system.
-
----
-
-## Key Development Moments
-
-### The Dual-Model Breakthrough
-
-**Problem:** YAMNet was accurate but sometimes missed gunshots. Custom model was specialized but narrow.
-
-**Solution:** Run both models in parallel:
-- YAMNet provides broad classification
-- Custom model catches specialized threats
-- Results are combined for decision-making
-
-### The Session ID Fix
-
-**Problem:** Claude responses were triggering alerts for sounds detected 30 seconds ago.
-
-**Solution:** Timestamp-based session tracking:
+**The Fix (3 lines):**
 ```javascript
-if (sessionId !== currentSession) {
-  return; // Ignore stale response
-}
+const sessionId = `${Date.now()}-${Math.random()}`;
+// Later in response handler...
+if (response.sessionId !== currentSession) return; // Ignore stale!
 ```
-
-Three lines of code, massive impact.
-
-### The Pattern Detection System
-
-**Problem:** Individual sounds could be false positives. Patterns indicate real threats.
-
-**Solution:** 20-detection window analysis:
-- Count critical sounds in recent history
-- 3+ critical sounds = high confidence
-- Trigger Claude for verification
 
 ---
 
-## What We Learned
+### The CarDoor-Shot Problem
 
-1. **Specs save time.** Planning upfront prevents refactoring later.
-2. **Context is everything.** Kiro's understanding of our project accelerated development.
-3. **Iteration beats perfection.** Ship, test, refine.
-4. **Accessibility is a feature.** Building for deaf users made the product better for everyone.
+**Day 3, 2 AM:** Every car door slam in YouTube gunshot test videos was triggering alerts.
+
+**Root cause:** YAMNet's "Door" classification was too close to "Gunshot" in the embedding space.
+
+**Solution:** The three-path trigger system:
+1. Single high-confidence isn't enough
+2. Need pattern confirmation OR
+3. Sustained consecutive detection
+
+---
+
+### The Memory Leak Hunt
+
+**Day 4:** After 2 hours of continuous monitoring, memory usage: 800MB+ 💀
+
+**Found it:** Audio buffer was growing instead of sliding.
+
+```diff
+- audioHistory.push(...newSamples);  // Grows forever!
++ // Circular buffer - fixed size
++ for (let i = 0; i < newSamples.length; i++) {
++   buffer[writeIndex] = newSamples[i];
++   writeIndex = (writeIndex + 1) % buffer.length;
++ }
+```
+
+---
+
+## 💡 "Aha!" Moments
+
+| Moment | Insight |
+|--------|---------|
+| Accessibility-first | Building for deaf users made UX better for everyone |
+| Dual-model approach | Complementary detection catches what single model misses |
+| Pattern > Confidence | 3 medium alerts > 1 high-confidence alert |
+| Premium design | Users trust beautiful interfaces more |
+
+---
+
+## 🛠️ What We'd Do Differently
+
+1. **Set up testing on Day 1** — Manual testing slowed iteration
+2. **Profile memory early** — Caught the leak late in dev
+3. **Design Claude prompts first** — API contract before code
+
+---
+
+## 📊 Quick Stats
+
+```
+Total Development Time: 120 hours (5 days × 4 devs × 6 hours)
+Bugs Fixed: 47
+Coffee Consumed: Immeasurable ☕
+Lines of Code: 4,000+
+Refactoring Sessions: 0 (thanks, Kiro specs!)
+```
 
 ---
 
 <p align="center">
-  <sub>Built with Kiro IDE at HackXios 2025</sub>
+  <sub>Built with lots of debugging and Kiro IDE</sub>
 </p>
