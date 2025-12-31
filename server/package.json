@@ -1,5 +1,17 @@
 {
+    "name": "silent-sentinel-server",
+    "version": "1.0.0",
+    "description": "Silent Sentinel - AI-powered emergency sound detection backend",
     "type": "module",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "engines": {
+        "node": ">=16.0.0",
+        "npm": ">=8.0.0"
+    },
     "dependencies": {
         "@anthropic-ai/sdk": "^0.24.3",
         "@modelcontextprotocol/sdk": "^1.25.1",

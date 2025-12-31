@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: silent-sentinel
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: PORT
+        value: 10000
+      - key: EMERGENCY_CONTACTS
+        sync: false
+    healthCheckPath: /api/safety-status
